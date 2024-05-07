@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: process.env.VUE_APP_FIREBASE,
-    authDomain: "belajardirumah-796e9.firebaseapp.com",
+    authDomain: "belajardirumah-796e9.firebaseapp.com",l
     projectId: "belajardirumah-796e9",
     storageBucket: "belajardirumah-796e9.appspot.com",
     messagingSenderId: "851032514440",

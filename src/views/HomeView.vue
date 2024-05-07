@@ -10,8 +10,10 @@
       <div class="caption">
         <h6>SMP Negeri 21 Malang</h6>
         <h2><em>Belajar</em> Dirumah</h2>
-        <div class="main-button" data-toggle="modal" data-target="#login">
-          <div class="scroll-to-section"><a href="#">Mulai Belajar</a></div>
+        <div class="main-button">
+          <div class="scroll-to-section" v-if="isLoggedIn" @click="alreadyLogin"><a href="#">Mulai Belajar</a></div>
+          <div class="scroll-to-section" v-else data-toggle="modal" data-target="#login"><a href="#">Mulai Belajar</a>
+          </div>
         </div>
       </div>
     </div>
@@ -110,6 +112,8 @@ export default {
   },
   data() {
     return {
+      isLoggedIn: localStorage.getItem('isLoggedIn'),
+
       allUser: [],
       loginData: {},
       registerData: {
@@ -118,6 +122,15 @@ export default {
     }
   },
   methods: {
+    alreadyLogin() {
+      const role = JSON.parse(localStorage.getItem('loginData'))
+      console.log(role)
+      if(role[0].role == "murid"){
+        this.$router.push('/student')
+      } else if (role[0].role == "guru"){
+        this.$router.push('/teacher')
+      }
+    },
     async login() {
       try {
         const check = await getDocs(query(collection(db, 'user'),
@@ -197,6 +210,7 @@ export default {
   },
   mounted() {
     this.getUser()
+    console.log(this.isLoggedIn)
   },
 }
 </script>
