@@ -168,6 +168,7 @@ export default {
     mounted() {
         console.log(this.loginData[0].name)
         this.getMateri()
+        this.checkRole()
     },
     computed: {
         filteredData() {
@@ -220,7 +221,8 @@ export default {
                     link: `https://drive.google.com/file/d/${id}/preview`,
                     teacher: this.loginData[0].name,
                     displayDate: new Date().toLocaleDateString(),
-                    date: Timestamp.now().toMillis()
+                    date: Timestamp.now().toMillis(),
+                    siswa_sudah_lihat_materi: []
                 }
                 console.log(data)
                 await addDoc(collection(db, 'materi'), data)
@@ -235,6 +237,14 @@ export default {
                 }, 1000);
             } catch (error) {
                 console.log(error)
+            }
+        },
+        checkRole() {
+            const role = localStorage.getItem('role')
+            if (!role || role != 'guru') {
+                this.$router.push('/forbidden')
+            } else {
+                console.log("Selamat Datang")
             }
         }
     }

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import forbidden from '../views/forbidden.vue'
 
 import student from '../views/student/student.vue'
 
@@ -12,6 +13,10 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/forbidden',
+    component: forbidden
   },
   {
     path: '/student',

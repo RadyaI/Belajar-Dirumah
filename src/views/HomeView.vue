@@ -126,7 +126,7 @@ export default {
       const role = JSON.parse(localStorage.getItem('loginData'))
       console.log(role)
       if(role[0].role == "murid"){
-        this.$router.push('/murid')
+        this.$router.push('/student')
       } else if (role[0].role == "guru"){
         this.$router.push('/teacher')
       }
@@ -151,10 +151,11 @@ export default {
             save.push({ ...userData, id: data.id })
             localStorage.setItem('loginData', JSON.stringify(save))
             localStorage.setItem('isLoggedIn', true)
+            localStorage.setItem('role', save[0].role)
             if (save[0].role == 'guru') {
-              location.href = 'teacher'
+              location.href = '/teacher'
             } else if (save[0].role == 'murid') {
-              location.href = 'student'
+              location.href = '/student'
             }
           })
         }
@@ -188,7 +189,7 @@ export default {
         }
         localStorage.setItem('loginData', JSON.stringify(data))
         setTimeout(() => {
-          location.href = 'student'
+          location.href = '/student'
         }, 1200);
       } catch (r) {
         console.log(r)

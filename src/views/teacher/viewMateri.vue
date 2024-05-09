@@ -126,6 +126,7 @@ export default {
     mounted() {
         this.getMateri(this.$route.params.id)
         console.log(this.inputMateri)
+        this.checkRole()
     },
     methods: {
         async getMateri(id) {
@@ -185,6 +186,14 @@ export default {
                 }
             } catch (error) {
                 console.log(error)
+            }
+        },
+        checkRole() {
+            const role = localStorage.getItem('role')
+            if (!role || role != 'guru') {
+                this.$router.push('/forbidden')
+            } else {
+                console.log("Selamat Datang")
             }
         }
     },
