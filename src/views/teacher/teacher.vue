@@ -26,16 +26,41 @@
                         <h2 style="cursor: pointer;" data-toggle="modal" data-target="#createMateri">Upload Materi</h2>
                     </div>
                 </div>
-
+                <div class="col">
+                    <select class="form-control" v-model="filter.kelas">
+                        <option value="-">Kelas</option>
+                        <option value="7">Kelas 7</option>
+                        <option value="8">Kelas 8</option>
+                        <option value="9">Kelas 9</option>
+                    </select> |
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Cari Materi..." v-model="filter.title">
+                </div>
+                <div class="col">
+                    <select class="form-control" v-model="filter.mapel">
+                        <option value="-">Mapel</option>
+                        <option value="Matematika">Matematika</option>
+                        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                        <option value="Bahasa Inggris">Bahasa Inggris</option>
+                        <option value="IPA">IPA</option>
+                        <option value="IPS">IPS</option>
+                        <option value="PKN">PKN</option>
+                        <option value="Seni Budaya">Seni Budaya</option>
+                        <option value="Agama">Agama</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
                 <!-- Card -->
-                <div class="my-card" v-for="(i, no) in materiData" :key="no" @click="viewMateri(i.id)">
+                <div class="my-card" v-for="(i, no) in filteredData" :key="no" @click="viewMateri(i.id)">
                     <div class="my-text">
                         <span>{{ i.title }}</span>
-                        <p class="my-subtitle">{{ i.mapel }}</p>
+                        <p class="my-subtitle">{{ i.mapel }} | Kelas {{ i.kelas }}</p>
                     </div>
                     <div class="my-icons">
                         <a class="my-btn" href="">
-                            
+
                         </a>
                         <a class="my-btn" href="">
 
@@ -46,7 +71,6 @@
                     </div>
                 </div>
                 <!-- Card -->
-
             </div>
         </div>
     </section>
@@ -119,7 +143,7 @@ import navbar from '../../components/navbar.vue'
 import footer from '../../components/footer.vue'
 
 import { db } from '../../firebase.js'
-import { Timestamp, addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import { Timestamp, addDoc, collection, getDocs, orderBy, query, where } from 'firebase/firestore'
 import swal from 'sweetalert'
 
 export default {
@@ -134,12 +158,34 @@ export default {
             loginData: JSON.parse(localStorage.getItem('loginData')),
 
             inputMateri: {},
-            materiData: []
+            materiData: [],
+            filter: {
+                kelas: '-',
+                mapel: '-'
+            }
         }
     },
     mounted() {
         console.log(this.loginData[0].name)
         this.getMateri()
+    },
+    computed: {
+        filteredData() {
+            let filterData = this.materiData
+            if (this.filter.title) {
+                filterData = filterData.filter(i => i.title.toLowerCase().toString().includes(this.filter.title.toLowerCase()))
+            }
+            if (this.filter.kelas && this.filter.kelas !== "-") {
+                filterData = filterData.filter(i => i.kelas == this.filter.kelas);
+            }
+
+            // Filter berdasarkan mapel
+            if (this.filter.mapel && this.filter.mapel !== "-") {
+                filterData = filterData.filter(i => i.mapel == this.filter.mapel);
+            }
+            filterData = filterData.filter(i => i.teacher == this.loginData[0].name)
+            return filterData
+        }
     },
     methods: {
         viewMateri(i) {
@@ -147,11 +193,12 @@ export default {
         },
         async getMateri() {
             try {
-                const materi = await getDocs(query(collection(db, "materi")), where('name', '==', this.loginData[0].name))
+                const materi = await getDocs(query(collection(db, "materi")), where('teacher', '==', "Ibu Guru"), orderBy('date', 'asc'))
                 materi.forEach((data) => {
                     const materiData = data.data()
                     this.materiData.push({ ...materiData, id: data.id })
                     console.log(this.materiData)
+                    console.log(`Sedang mengambil materi dari guru bernama ${this.loginData[0].name}`)
                 })
             } catch (error) {
                 console.log(error)

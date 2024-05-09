@@ -18,7 +18,11 @@
                     <h6><router-link to="/teacher"><button class="btn btn-info">Kembali</button></router-link> | {{
                 materiData[0].mapel }} | {{ materiData[0].displayDate }} | <button class="btn btn-warning"
                             data-toggle="modal" data-target="#updateMateri">Edit</button></h6>
-                    <iframe :src="materiData[0].link" frameborder="2" width="80%" height="300px"></iframe>
+                    <iframe :src="materiData[0].link" frameborder="2" width="90%" height="400px"></iframe>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                 </div>
             </div>
         </section>
@@ -50,7 +54,8 @@
                         <div class="modal-body">
                             <label for="judul">Judul</label>
                             <input type="text" id="judul" class="form-control" required
-                                placeholder="Contoh: Materi Aljabar Pertemuan 1" v-model="inputMateri[0].title" autocomplete="off">
+                                placeholder="Contoh: Materi Aljabar Pertemuan 1" v-model="inputMateri[0].title"
+                                autocomplete="off">
 
                             <label for="mapel">Mapel: </label>
                             <select id="mapel" class="form-control" required v-model="inputMateri[0].mapel">
@@ -150,7 +155,7 @@ export default {
                         button: false
                     })
                     setTimeout(() => {
-                        location.href = '/'
+                        location.href = '/teacher'
                     }, 1200);
                 }
             } catch (r) {
