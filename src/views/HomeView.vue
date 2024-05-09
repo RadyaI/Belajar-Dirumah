@@ -8,7 +8,7 @@
 
     <div class="video-overlay header-text">
       <div class="caption">
-        <h6>SMP Negeri 21 Malang</h6>
+        <!-- <h6>SMP Labolatorium UNIVERSITAS NEGERI MALANG</h6> -->
         <h2><em>Belajar</em> Dirumah</h2>
         <div class="main-button">
           <div class="scroll-to-section" v-if="isLoggedIn" @click="alreadyLogin"><a href="#">Mulai Belajar</a></div>
@@ -126,7 +126,7 @@ export default {
       const role = JSON.parse(localStorage.getItem('loginData'))
       console.log(role)
       if(role[0].role == "murid"){
-        this.$router.push('/student')
+        this.$router.push('/murid')
       } else if (role[0].role == "guru"){
         this.$router.push('/teacher')
       }
@@ -152,9 +152,9 @@ export default {
             localStorage.setItem('loginData', JSON.stringify(save))
             localStorage.setItem('isLoggedIn', true)
             if (save[0].role == 'guru') {
-              location.href = '/teacher'
+              location.href = 'teacher'
             } else if (save[0].role == 'murid') {
-              location.href = '/student'
+              location.href = 'student'
             }
           })
         }
@@ -188,7 +188,7 @@ export default {
         }
         localStorage.setItem('loginData', JSON.stringify(data))
         setTimeout(() => {
-          location.href = '/student'
+          location.href = 'student'
         }, 1200);
       } catch (r) {
         console.log(r)

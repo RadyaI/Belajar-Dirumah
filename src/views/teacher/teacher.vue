@@ -11,7 +11,7 @@
                 <h6>Selamat Datang {{ loginData[0].name }}</h6>
                 <h2><em>Your</em> Classroom</h2>
                 <div class="main-button">
-                    <div class="scroll-to-section"><a href="#">Guru</a></div>
+                    <div class="scroll-to-section"><a href="">Guru</a></div>
                 </div>
             </div>
         </div>
@@ -23,29 +23,24 @@
                 <div class="col-md-12">
                     <div class="section-heading">
                         <h2>Materi Anda</h2>
-                        <h2 style="cursor: pointer;">Upload Materi</h2>
+                        <h2 style="cursor: pointer;" data-toggle="modal" data-target="#createMateri">Upload Materi</h2>
                     </div>
                 </div>
 
                 <!-- Card -->
-                <div class="my-card">
+                <div class="my-card" v-for="(i, no) in materiData" :key="no" @click="viewMateri(i.id)">
                     <div class="my-text">
-                        <span>Materi Aljabar persiapan UH</span>
-                        <p class="my-subtitle">Matematika</p>
+                        <span>{{ i.title }}</span>
+                        <p class="my-subtitle">{{ i.mapel }}</p>
                     </div>
                     <div class="my-icons">
-                        <a class="my-btn" href="#">
-                            <svg y="0" xmlns="http://www.w3.org/2000/svg" x="0" width="100" viewBox="0 0 100 100"
-                                preserveAspectRatio="xMidYMid meet" height="100" class="my-svg-icon">
-                                <path stroke-width="8" stroke-linejoin="round" stroke-linecap="round" fill="none"
-                                    d="M31.8,64.5a14.5,14.5,0,0,1-3.2-28.7,17.5,17.5,0,0,1-.4-4,18.2,18.2,0,0,1,36-3.6h.3a18.2,18.2,0,0,1,3.7,36M39.1,75.4,50,86.3m0,0L60.9,75.4M50,86.3V42.7">
-                                </path>
-                            </svg>
+                        <a class="my-btn" href="">
+                            
                         </a>
-                        <a class="my-btn" href="#">
+                        <a class="my-btn" href="">
 
                         </a>
-                        <a class="my-btn" href="#">
+                        <a class="my-btn" href="">
 
                         </a>
                     </div>
@@ -58,7 +53,8 @@
 
     <section>
         <!-- Add Materi -->
-        <div class="modal fade" id="createMateri" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="createMateri" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -67,13 +63,47 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <label for="judul">Judul</label>
+                            <input type="text" id="judul" class="form-control" required
+                                placeholder="Contoh: Materi Aljabar Pertemuan 1" v-model="inputMateri.title">
+
+                            <label for="mapel">Mapel: </label>
+                            <select id="mapel" class="form-control" required v-model="inputMateri.mapel">
+                                <option value="Matematika">Matematika</option>
+                                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                <option value="IPA">IPA</option>
+                                <option value="IPS">IPS</option>
+                                <option value="PKN">PKN</option>
+                                <option value="Seni Budaya">Seni Budaya</option>
+                                <option value="Agama">Agama</option>
+                            </select>
+
+                            <label for="kelas">Kelas: </label>
+                            <select id="kelas" class="form-control" required v-model="inputMateri.kelas">
+                                <option value="7">Kelas 7</option>
+                                <option value="8">Kelas 8</option>
+                                <option value="9">Kelas 9</option>
+                            </select>
+
+                            <label for="status">Status: </label>
+                            <select id="status" class="form-control" required v-model="inputMateri.status">
+                                <option value="penting">Penting</option>
+                                <option value="sedang">Sedang</option>
+                                <option value="rendah">Rendah</option>
+                            </select>
+
+                            <label for="link">Link: </label>
+                            <input type="text" id="link" class="form-control" required placeholder="Masukkan Link Drive"
+                                v-model="inputMateri.link" autocomplete="off">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" @click="uploadMateri" class="btn btn-primary">Upload</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -88,6 +118,10 @@
 import navbar from '../../components/navbar.vue'
 import footer from '../../components/footer.vue'
 
+import { db } from '../../firebase.js'
+import { Timestamp, addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import swal from 'sweetalert'
+
 export default {
     name: 'app',
     components: {
@@ -97,11 +131,65 @@ export default {
     data() {
         return {
             isLoggedIn: localStorage.getItem('isLoggedIn'),
-            loginData: JSON.parse(localStorage.getItem('loginData'))
+            loginData: JSON.parse(localStorage.getItem('loginData')),
+
+            inputMateri: {},
+            materiData: []
         }
     },
     mounted() {
         console.log(this.loginData[0].name)
+        this.getMateri()
+    },
+    methods: {
+        viewMateri(i) {
+            this.$router.push(`/teacher/materi/${i}`)
+        },
+        async getMateri() {
+            try {
+                const materi = await getDocs(query(collection(db, "materi")), where('name', '==', this.loginData[0].name))
+                materi.forEach((data) => {
+                    const materiData = data.data()
+                    this.materiData.push({ ...materiData, id: data.id })
+                    console.log(this.materiData)
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        getDriveId(link) {
+            const regex = /\/d\/([a-zA-Z0-9_-]+)(?:\/|$)/;
+            const match = link.match(regex);
+            return match ? match[1] : null;
+        },
+        async uploadMateri() {
+            try {
+                const id = this.getDriveId(this.inputMateri.link)
+                const data = {
+                    title: this.inputMateri.title,
+                    mapel: this.inputMateri.mapel,
+                    kelas: this.inputMateri.kelas,
+                    status: this.inputMateri.status,
+                    link: `https://drive.google.com/file/d/${id}/preview`,
+                    teacher: this.loginData[0].name,
+                    displayDate: new Date().toLocaleDateString(),
+                    date: Timestamp.now().toMillis()
+                }
+                console.log(data)
+                await addDoc(collection(db, 'materi'), data)
+                swal({
+                    icon: 'success',
+                    title: false,
+                    button: false,
+                    timer: 1000
+                })
+                setTimeout(() => {
+                    location.reload()
+                }, 1000);
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
 }
 </script>
@@ -117,6 +205,8 @@ export default {
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    margin-left: 15px;
+    margin-top: 15px
 }
 
 .my-card::before {

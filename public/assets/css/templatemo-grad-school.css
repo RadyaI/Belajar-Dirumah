@@ -180,8 +180,8 @@ a.menu-link { display: none; }
 }
 
 .main-header .logo a {
-    font-size: 36px;
-    text-transform: uppercase;
+    font-size: 25px;
+    /* text-transform: uppercase; */
     font-weight: 800;
     color: #fff;
 }
@@ -302,7 +302,7 @@ a.menu-link { display: none; }
     max-width: 100%;
     max-height: 100vh;
     object-fit: cover;
-    z-index: -1;
+    /* z-index: -1; */
 }
 
 #bg-video::-webkit-media-controls {
@@ -325,6 +325,7 @@ a.menu-link { display: none; }
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
+  /* z-index: 999; */
 }
 
 .main-banner .caption h6 {
@@ -340,6 +341,16 @@ a.menu-link { display: none; }
   margin-top: 30px;
   margin-bottom: 30px;
   font-size: 64px;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.main-banner .caption h5 {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 24px;
   text-transform: uppercase;
   font-weight: 800;
   color: #fff;
@@ -1080,9 +1091,9 @@ section.video .left-content .main-button {
 .mfp-arrow,
 .mfp-preloader,
 .mfp-counter {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+  /* -webkit-user-select: none;
+  -moz-user-select: none; */
+  /* user-select: none; */
 }
 
 .mfp-loading.mfp-figure {
