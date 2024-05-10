@@ -125,9 +125,9 @@ export default {
     alreadyLogin() {
       const role = JSON.parse(localStorage.getItem('loginData'))
       console.log(role)
-      if(role[0].role == "murid"){
+      if (role[0].role == "murid") {
         this.$router.push('/student')
-      } else if (role[0].role == "guru"){
+      } else if (role[0].role == "guru") {
         this.$router.push('/teacher')
       }
     },
@@ -188,6 +188,7 @@ export default {
           role: this.registerData.role,
         }
         localStorage.setItem('loginData', JSON.stringify(data))
+        localStorage.setItem('role', data.role)
         setTimeout(() => {
           location.href = '/student'
         }, 1200);
