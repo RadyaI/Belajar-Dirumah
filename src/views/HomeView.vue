@@ -152,6 +152,7 @@ export default {
             localStorage.setItem('loginData', JSON.stringify(save))
             localStorage.setItem('isLoggedIn', true)
             localStorage.setItem('role', save[0].role)
+            localStorage.setItem('name', save[0].name)
             if (save[0].role == 'guru') {
               location.href = '/teacher'
             } else if (save[0].role == 'murid') {
@@ -187,8 +188,9 @@ export default {
           email: this.registerData.email,
           role: this.registerData.role,
         }
-        localStorage.setItem('loginData', JSON.stringify(data))
+        localStorage.setItem('loginData', JSON.stringify(this.registerData))
         localStorage.setItem('role', data.role)
+        localStorage.setItem('role', data.name)
         setTimeout(() => {
           location.href = '/student'
         }, 1200);

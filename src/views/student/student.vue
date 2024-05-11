@@ -26,6 +26,12 @@
                     </div>
                 </div>
                 <div class="col">
+                    <select class="form-control" v-model="filter.done">
+                        <option value="not_done">Belum Selesai</option>
+                        <option value="done">Selesai</option>
+                    </select>
+                </div>
+                <div class="col">
                     <input type="text" class="form-control" placeholder="Cari Materi..." v-model="filter.title">
                 </div>
                 <div class="col">
@@ -89,12 +95,13 @@ export default {
         return {
             isLoggedIn: localStorage.getItem('isLoggedIn'),
             loginData: JSON.parse(localStorage.getItem('loginData')),
-
+            name: localStorage.getItem('name'),
             inputMateri: {},
             materiData: [],
             filter: {
                 title: '',
-                mapel: '-'
+                mapel: '-',
+                done: 'not_done'
             }
         }
     },
@@ -105,6 +112,13 @@ export default {
     computed: {
         filterMateri() {
             let filtered = this.materiData
+
+            filtered = filtered.filter(i => !i.siswa_sudah_lihat_materi.includes(this.loginData[0].name))
+
+            if (this.filter.done == 'done') {
+                filtered = this.materiData.filter(i => i.siswa_sudah_lihat_materi.includes(this.loginData[0].name))
+                console.log(filtered)
+            }
             if (this.filter.title) {
                 filtered = filtered.filter(i => i.title.toString().toLowerCase().includes(this.filter.title.toLowerCase().toString()))
                 // console.log('Filtering')
@@ -116,6 +130,9 @@ export default {
         }
     },
     methods: {
+        viewMateri(i) {
+            this.$router.push(`/student/${i}`)
+        },
         async getMateri() {
             try {
                 let get = await getDocs(query(collection(db, 'materi'), where("kelas", '==', this.loginData[0].kelas)))

@@ -1,6 +1,5 @@
 <template>
     <div>
-        <navbar></navbar>
         <section class="section main-banner" id="top" data-section="section1">
             <video autoplay muted loop id="bg-video">
                 <!-- <source src="#" type="video/mp4" /> -->
@@ -103,7 +102,7 @@
 </template>
 
 <script>
-import navbar from '../../components/navbar.vue'
+// import navbar from '../../components/navbar.vue'
 import footer from '../../components/footer.vue'
 
 import { db } from '@/firebase.js'
@@ -114,7 +113,7 @@ import swal from 'sweetalert'
 export default {
     name: 'app',
     components: {
-        navbar: navbar,
+        // navbar: navbar,
         footerSec: footer
     },
     data() {

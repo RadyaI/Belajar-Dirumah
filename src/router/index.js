@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import forbidden from '../views/forbidden.vue'
 
 import student from '../views/student/student.vue'
+import studentView from './../views/student/studentView.vue'
 
 
 import teacher from '../views/teacher/teacher.vue'
@@ -21,6 +22,10 @@ const routes = [
   {
     path: '/student',
     component: student
+  },
+  {
+    path: '/student/:id',
+    component: studentView
   },
   {
     path: '/teacher',
